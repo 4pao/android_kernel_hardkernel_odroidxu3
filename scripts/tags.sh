@@ -187,21 +187,21 @@ exuberant()
 	--regex-c++='/TESTCLEARFLAG_FALSE\(([^,)]*).*/TestClearPage\1/' \
 	--regex-c++='/__TESTCLEARFLAG_FALSE\(([^,)]*).*/__TestClearPage\1/' \
 	--regex-c++='/_PE\(([^,)]*).*/PEVENT_ERRNO__\1/'		\
-	--regex-c='/PCI_OP_READ\((\w*).*[1-4]\)/pci_bus_read_config_\1/' \
-	--regex-c='/PCI_OP_WRITE\((\w*).*[1-4]\)/pci_bus_write_config_\1/' \
-	--regex-c='/DEFINE_(MUTEX|SEMAPHORE|SPINLOCK)\((\w*)/\2/v/'	\
-	--regex-c='/DEFINE_(RAW_SPINLOCK|RWLOCK|SEQLOCK)\((\w*)/\2/v/'	\
-	--regex-c='/DECLARE_(RWSEM|COMPLETION)\((\w*)/\2/v/'		\
-	--regex-c='/DECLARE_BITMAP\((\w*)/\1/v/'			\
-	--regex-c='/(^|\s)(|L|H)LIST_HEAD\((\w*)/\3/v/'			\
-	--regex-c='/(^|\s)RADIX_TREE\((\w*)/\2/v/'			\
-	--regex-c='/DEFINE_PER_CPU\(([^,]*,\s*)(\w*).*\)/\2/v/'		\
-	--regex-c='/DEFINE_PER_CPU_SHARED_ALIGNED\(([^,]*,\s*)(\w*).*\)/\2/v/' \
-	--regex-c='/DECLARE_WAIT_QUEUE_HEAD\((\w*)/\1/v/'		\
-	--regex-c='/DECLARE_(TASKLET|WORK|DELAYED_WORK)\((\w*)/\2/v/'	\
-	--regex-c='/DEFINE_PCI_DEVICE_TABLE\((\w*)/\1/v/'		\
-	--regex-c='/(^\s)OFFSET\((\w*)/\2/v/'				\
-	--regex-c='/(^\s)DEFINE\((\w*)/\2/v/'
+	--regex-c='/PCI_OP_READ\(([[:word:]]*).*[1-4]\)/pci_bus_read_config_\1/' \
+	--regex-c='/PCI_OP_WRITE\(([[:word:]]*).*[1-4]\)/pci_bus_write_config_\1/' \
+	--regex-c='/DEFINE_(MUTEX|SEMAPHORE|SPINLOCK)\(([[:word:]]*)/\2/v/'	\
+	--regex-c='/DEFINE_(RAW_SPINLOCK|RWLOCK|SEQLOCK)\(([[:word:]]*)/\2/v/'	\
+	--regex-c='/DECLARE_(RWSEM|COMPLETION)\(([[:word:]]*)/\2/v/'		\
+	--regex-c='/DECLARE_BITMAP\(([[:word:]]*)/\1/v/'			\
+	--regex-c='/(^|[[:space:]])(|L|H)LIST_HEAD\(([[:word:]]*)/\3/v/'			\
+	--regex-c='/(^|[[:space:]])RADIX_TREE\(([[:word:]]*)/\2/v/'			\
+	--regex-c='/DEFINE_PER_CPU\(([^,]*,[[:space:]]*)([[:word:]]*).*\)/\2/v/'		\
+	--regex-c='/DEFINE_PER_CPU_SHARED_ALIGNED\(([^,]*,[[:space:]]*)([[:word:]]*).*\)/\2/v/' \
+	--regex-c='/DECLARE_WAIT_QUEUE_HEAD\(([[:word:]]*)/\1/v/'		\
+	--regex-c='/DECLARE_(TASKLET|WORK|DELAYED_WORK)\(([[:word:]]*)/\2/v/'	\
+	--regex-c='/DEFINE_PCI_DEVICE_TABLE\(([[:word:]]*)/\1/v/'		\
+	--regex-c='/(^[[:space:]])OFFSET\(([[:word:]]*)/\2/v/'				\
+	--regex-c='/(^[[:space:]])DEFINE\(([[:word:]]*)/\2/v/'
 
 	all_kconfigs | xargs $1 -a                              \
 	--langdef=kconfig --language-force=kconfig              \
@@ -249,13 +249,13 @@ emacs()
 	--regex='/PCI_OP_WRITE(\([a-z]*[a-z]\).*[1-4])/pci_bus_write_config_\1/'
 
 	all_kconfigs | xargs $1 -a                              \
-	--regex='/^[ \t]*\(\(menu\)*config\)[ \t]+\([a-zA-Z0-9_]+\)/\3/'
+	--regex='/^[[:blank:]]*\(\(menu\)*config\)[[:blank:]]+\([a-zA-Z0-9_]+\)/\3/'
 
 	all_kconfigs | xargs $1 -a                              \
-	--regex='/^[ \t]*\(\(menu\)*config\)[ \t]+\([a-zA-Z0-9_]+\)/CONFIG_\3/'
+	--regex='/^[[:blank:]]*\(\(menu\)*config\)[[:blank:]]+\([a-zA-Z0-9_]+\)/CONFIG_\3/'
 
 	all_defconfigs | xargs -r $1 -a                         \
-	--regex='/^#?[ \t]?\(CONFIG_[a-zA-Z0-9_]+\)/\1/'
+	--regex='/^#?[[:blank:]]?\(CONFIG_[a-zA-Z0-9_]+\)/\1/'
 }
 
 xtags()
@@ -320,5 +320,5 @@ esac
 
 # Remove structure forward declarations.
 if [ -n "$remove_structs" ]; then
-    LANG=C sed -i -e '/^\([a-zA-Z_][a-zA-Z0-9_]*\)\t.*\t\/\^struct \1;.*\$\/;"\tx$/d' $1
+    LANG=C sed -i -e '/^\([a-zA-Z_][a-zA-Z0-9_]*\)'$'\t''.*'$'\t''\/\^struct \1;.*\$\/;"'$'\t''x$/d' $1
 fi

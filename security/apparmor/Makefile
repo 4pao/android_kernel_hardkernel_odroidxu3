@@ -16,8 +16,8 @@ clean-files := capability_names.h rlim_names.h
 #    [1] = "dac_override",
 quiet_cmd_make-caps = GEN     $@
 cmd_make-caps = echo "static const char *const capability_names[] = {" > $@ ;\
-	sed $< >>$@ -r -n -e '/CAP_FS_MASK/d' \
-	-e 's/^\#define[ \t]+CAP_([A-Z0-9_]+)[ \t]+([0-9]+)/[\2] = "\L\1",/p';\
+	sed $< >>$@ -E -n -e '/CAP_FS_MASK/d' \
+	-e 's/^\#define[[:blank:]]+CAP_([A-Z0-9_]+)[[:blank:]]+([0-9]+)/[\2] = "\L\1",/p';\
 	echo "};" >> $@
 
 
@@ -45,14 +45,14 @@ cmd_make-caps = echo "static const char *const capability_names[] = {" > $@ ;\
 quiet_cmd_make-rlim = GEN     $@
 cmd_make-rlim = echo "static const char *const rlim_names[RLIM_NLIMITS] = {" \
 	> $@ ;\
-	sed $< >> $@ -r -n \
-	    -e 's/^\# ?define[ \t]+(RLIMIT_([A-Z0-9_]+)).*/[\1] = "\L\2",/p';\
+	sed $< >> $@ -E -n \
+	    -e 's/^\# ?define[[:blank:]]+(RLIMIT_([A-Z0-9_]+)).*/[\1] = "\L\2",/p';\
 	echo "};" >> $@ ;\
 	echo "static const int rlim_map[RLIM_NLIMITS] = {" >> $@ ;\
-	sed -r -n "s/^\# ?define[ \t]+(RLIMIT_[A-Z0-9_]+).*/\1,/p" $< >> $@ ;\
+	sed -E -n "s/^\# ?define[[:blank:]]+(RLIMIT_[A-Z0-9_]+).*/\1,/p" $< >> $@ ;\
 	echo "};" >> $@ ; \
 	echo -n '\#define AA_FS_RLIMIT_MASK "' >> $@ ;\
-	sed -r -n 's/^\# ?define[ \t]+RLIMIT_([A-Z0-9_]+).*/\L\1/p' $< | \
+	sed -E -n 's/^\# ?define[[:blank:]]+RLIMIT_([A-Z0-9_]+).*/\L\1/p' $< | \
 	    tr '\n' ' ' | sed -e 's/ $$/"\n/' >> $@
 
 $(obj)/capability.o : $(obj)/capability_names.h

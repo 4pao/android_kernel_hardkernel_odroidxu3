@@ -29,7 +29,7 @@ targets	+= $(realmode-y)
 
 REALMODE_OBJS = $(addprefix $(obj)/,$(realmode-y))
 
-sed-pasyms := -n -r -e 's/^([0-9a-fA-F]+) [ABCDGRSTVW] (.+)$$/pa_\2 = \2;/p'
+sed-pasyms := -n -E -e 's/^([0-9a-fA-F]+) [ABCDGRSTVW] (.+)$$/pa_\2 = \2;/p'
 
 quiet_cmd_pasyms = PASYMS  $@
       cmd_pasyms = $(NM) $(filter-out FORCE,$^) | \
