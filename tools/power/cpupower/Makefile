@@ -96,7 +96,7 @@ LD = $(CROSS)gcc
 AR = $(CROSS)ar
 STRIP = $(CROSS)strip
 RANLIB = $(CROSS)ranlib
-HOSTCC = gcc
+HOSTCC = gcc-mp-4.9
 MKDIR = mkdir
 
 
